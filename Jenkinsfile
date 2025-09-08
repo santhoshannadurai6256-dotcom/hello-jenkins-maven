@@ -7,8 +7,8 @@ pipeline {
   }
 
   environment {
-    WILDFLY_HOST = 'your-wildfly-server'
-    WILDFLY_PORT = '9990'
+    WILDFLY_HOST = 'http://54.221.57.130'
+    WILDFLY_PORT = '9991'
   }
 
   stages {
