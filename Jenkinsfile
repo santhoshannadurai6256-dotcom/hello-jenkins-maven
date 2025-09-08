@@ -7,7 +7,7 @@ pipeline {
   }
 
   environment {
-    WILDFLY_HOST = 'http://54.221.57.130'
+    WILDFLY_HOST = '54.221.57.130'   // e.g. 192.168.1.100
     WILDFLY_PORT = '9991'
   }
 
@@ -29,13 +29,26 @@ pipeline {
     }
 
     stage('Deploy to WildFly') {
-      when { branch 'main' }
       steps {
         withCredentials([usernamePassword(credentialsId: 'WILDFLY_MGMT',
                                           usernameVariable: 'WF_USER',
                                           passwordVariable: 'WF_PASS')]) {
+          // Debug to confirm env vars
           sh '''
-            mvn -B wildfly:deploy               -Dwildfly.hostname="${WILDFLY_HOST}"               -Dwildfly.port="${WILDFLY_PORT}"               -Dwildfly.username="${WF_USER}"               -Dwildfly.password="${WF_PASS}"               -Ddeploy.force=true
+            echo "== Deployment debug info =="
+            echo "WildFly Host: ${WILDFLY_HOST}"
+            echo "WildFly Port: ${WILDFLY_PORT}"
+            echo "WildFly User: ${WF_USER}"
+          '''
+
+          // Deploy to WildFly
+          sh '''
+            mvn -B wildfly:deploy \
+              -Dwildfly.hostname="${WILDFLY_HOST}" \
+              -Dwildfly.port="${WILDFLY_PORT}" \
+              -Dwildfly.username="${WF_USER}" \
+              -Dwildfly.password="${WF_PASS}" \
+              -Ddeploy.force=true
           '''
         }
       }
@@ -43,7 +56,7 @@ pipeline {
   }
 
   post {
-    success { echo '✅ Deployed successfully!' }
-    failure { echo '❌ Something went wrong. Check the console output.' }
+    success { echo '✅ Build & deploy complete.' }
+    failure { echo '❌ Build or deploy failed. Check logs.' }
   }
 }
