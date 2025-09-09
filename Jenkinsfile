@@ -7,7 +7,7 @@ pipeline {
   }
 
   environment {
-    WILDFLY_HOST = '54.221.57.130'   // e.g. 192.168.1.100
+    WILDFLY_HOST = '54.163.211.201'   // e.g. 192.168.1.100
     WILDFLY_PORT = '9991'
   }
 
